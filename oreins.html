@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- 直接內嵌 CSS -->
+  <style>
+    .search-container {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      padding: 5px 10px;
+      width: 250px;
+      background: white;
+    }
+
+    .search-input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 16px;
+      padding: 5px;
+    }
+
+    .search-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      color: #555;
+    }
+
+    .search-button:hover {
+      color: #000;
+    }
+
+    #results {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
+
+  <!-- 直接內嵌 JavaScript -->
+  <script>
+    function searchGoogleSheet() {
+      var query = document.getElementById("search").value;
+      var apiUrl = "https://script.google.com/macros/s/AKfycbxyz/exec?q=" + encodeURIComponent(query);
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          var resultDiv = document.getElementById("results");
+          resultDiv.innerHTML = "";
+
+          if (data.length > 0) {
+            data.forEach(row => {
+              var div = document.createElement("div");
+              div.textContent = row.join(" | ");
+              resultDiv.appendChild(div);
+            });
+          } else {
+            resultDiv.innerHTML = "<p>查無結果</p>";
+          }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+  </script>
+
+</head>
+<body>
+  <div class="search-container">
+    <input type="text" id="search" class="search-input" placeholder="輸入車輛品牌..." onkeydown="if(event.key==='Enter') searchGoogleSheet()">
+    <button class="search-button" onclick="searchGoogleSheet()">🔍</button>
+  </div>
+  <div id="results"></div>
+</body>
+</html>
